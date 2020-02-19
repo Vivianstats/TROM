@@ -1,0 +1,21 @@
+importFrom(AnnotationDbi, as.list, Ontology, Term)
+importFrom(openxlsx, write.xlsx, read.xlsx)
+import(topGO, GO.db, RColorBrewer, lattice, gplots, methods, gtools)
+importFrom("grDevices", "dev.off", "gray", "pdf")
+importFrom("graphics", "abline", "axis", "barplot", "box", "hist",
+             "image", "layout", "lines", "mtext", "par", "plot",
+             "plot.new", "rect", "text", "title")
+importFrom("stats", "as.dendrogram", "density", "dhyper", "dist",
+             "hclust", "median", "order.dendrogram", "phyper",
+             "quantile", "reorder", "sd")
+importFrom("utils", "write.table")
+exportClasses(GOTermsAnnDbBimap)
+export(bs.trom)
+export(heatmap.3)
+export(find.top.GO.terms)
+export(find.top.GO.slim.terms)
+export(ws.trom.orthologs)
+export(ws.trom)
+export(select.associated.genes)
+export(select.associated.orthologs)
+export(choose.z)

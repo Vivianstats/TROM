@@ -1,0 +1,186 @@
+###### --------------------------------------------------------------
+###### correlation with genesets
+###### --------------------------------------------------------------
+rm(ls = list())
+library(parallel)
+# library(ClusterR)
+library(ggplot2); theme_set(theme_bw())
+library(tidyr)
+library(igraph)
+library(WGCNA)
+library(dynamicTreeCut)
+
+# install.packages("RISmed")
+library(RISmed)
+
+# source("https://bioconductor.org/biocLite.R");
+# biocLite(c("AnnotationDbi", "GO.db", "org.Hs.eg.db", "org.Mm.eg.db",
+#            "XML", "WGCNA", "TxDb.Hsapiens.UCSC.hg19.knownGene", 
+#            "TxDb.Mmusculus.UCSC.mm10.knownGene")); 
+# install.packages("~/software/anRichmentMethods_0.87-1.tar.gz", repos = NULL, type = "source")
+# install.packages("~/software/anRichment_0.96.tar.gz", repos = NULL, type = "source")
+
+options(stringsAsFactors = FALSE)
+library("anRichment")
+
+source("~/Dropbox/scSimilarity/code/suppfuns/calculate_sigma_v2.R")
+source("~/Dropbox/scSimilarity/code/suppfuns/get_mix_parameters.R")
+
+ncores = 32
+
+plot_dir = "~/Dropbox/scSimilarity/code/result/prem/"
+
+### get genesets
+#geneset = readRDS("~/Dropbox/scSimilarity/data/genesets/c5.bp.v6.2.rds")
+geneset = readRDS("~/Dropbox/scSimilarity/data/genesets/h.all.v6.2.rds")
+
+
+
+### get data
+data_dir = "/media/server2/data1/scSimulate/data/"
+rdata = c("study1.rds", "study2.rds", "study3-a.rds", 
+          "study4.rds", "study6.rds", "study7.rds")
+study_names = c("Human-Smartseq2","Mouse-Dropseq","Mouse-10x",
+                "Human-C1", "Mouse-inDrop", "Human-Seqwell")
+sid = 4
+data = readRDS(paste0(data_dir, rdata[sid]))
+count = data$count
+rownames(count) = substr(rownames(count), 1, nchar(rownames(count))-1)
+labels = data$labels
+table(labels)
+
+### normalization
+count = count[, labels == "astrocytes"]
+count = sweep(count, MARGIN = 2, FUN = "*", 1e6/colSums(count))
+count = count[! (rownames(count) %in% c("no_feature", "alignment_not_unique")), ]
+count = count[rowSums(count) > 0, ]
+#gene_sd = apply(count, 1, sd)
+#gene_mu = rowMeans(count)
+#gene_cv = gene_sd/gene_mu
+#count = count[order(gene_mu, decreasing = TRUE)[1:2000], ]
+
+### Impute gene's mean expression -----------------------------
+mixpara = get_mix_parameters(count = log10(count+1.01), ncores = ncores)
+genenames = rownames(count)
+rownames(mixpara) = genenames
+#saveRDS(mixpara, file = "~/Dropbox/scSimilarity/code/mixpara.rds")
+
+ind = order(mixpara[,"mu"], decreasing = TRUE)[1:5000]
+count = count[ind, ]
+
+
+mu_by_set = sapply(geneset, function(x){
+  genes = intersect(x, genenames)
+  if(length(genes) == 0) return(NA)
+  mean(mixpara[genes, "mu"], na.rm = TRUE)
+})
+# geneset = geneset[mu_by_set > median(mu_by_set, na.rm = TRUE) &
+#                     (!is.na(mu_by_set))]
+
+genenames = rownames(count)
+cor_raw = abs(cor(t(count)))
+
+shrink = calculate_sigma(count, geneset)
+cor_est = shrink$sigma
+shrink$lambda
+
+### WGCNA ----------------------------------------------------------------
+
+adjmat = cor_est
+pickSoftThreshold = pickSoftThreshold.fromSimilarity(adjmat, RsquaredCut = 0.8)
+SoftThreshold = pickSoftThreshold$powerEstimate
+adjMat = adjacency.fromSimilarity(adjmat, type = "unsigned", power = SoftThreshold)
+TOMdist = TOMdist(adjMat)
+clust = hclust(as.dist(TOMdist), method = "average")
+### module detection
+modules = cutreeDynamic(dendro = clust, distM = TOMdist, minClusterSize = 20)
+saveRDS(modules, file = paste0(plot_dir, "modules.rds"))
+
+ncol = length(unique(modules))
+COL = c("#CC0C00", "#5C88DA", "#FFB200", "#84BD00",
+         "#F2799F", "#48A1AB", "#AB6CD8", "#ED6A5A")
+colors = c("#7C878E", rep_len(COL, ncol-1))
+colors = colors[modules+1]
+
+pdf(paste0(plot_dir, "dendro.pdf"))
+plotDendroAndColors(clust, colors, dendroLabels = FALSE, addGuide = TRUE, main = "Gene dendrogram and module colors")
+# diag(TOMdist) = NA
+# TOMplot(TOMdist^3, clust, colors)
+dev.off()
+
+intra_con = intramodularConnectivity(adjMat = adjMat, modules)
+# module connectivity
+mod_con = sapply(1:(ncol-1), function(kk){
+  genes = genenames[modules == kk]
+  mean(intra_con[genes, "kWithin"])/length(genes)
+})
+order(mod_con, decreasing = TRUE)
+# module expression
+mod_exp = sapply(1:(ncol-1), function(kk){
+  genes = genenames[modules == kk]
+  mean(mixpara[genes, "mu"], na.rm = TRUE)
+})
+order(mod_exp, decreasing = TRUE)
+
+
+### GO enrichment analysis
+GOcollection = buildGOcollection(organism = "human")
+GO.BPcollection = subsetCollection(GOcollection, tags = "GO.BP")
+entrez = convert2entrez(organism = "human", symbol = genenames)
+table(is.finite(entrez))
+GOenrichment = enrichmentAnalysis(classLabels = modules, identifiers = entrez,
+                                  refCollection = GO.BPcollection, useBackground = "given", 
+                                  # useGroups = "GO.bp", 
+                                  threshold = 1e-3, thresholdType = "Bonferroni", 
+                                  getOverlapSymbols = FALSE, getOverlapEntrez = FALSE,
+                                  ignoreLabels = 0)
+tabled = GOenrichment$enrichmentTabl
+# table.display$overlapGenes = shortenStrings(table.display$overlapGenes, maxLength = 70,split = "|")
+head(tabled)
+write.csv(GOenrichment$enrichmentTable, file = paste0(plot_dir, "GOenrichment.csv"), row.names = FALSE)
+gc()
+
+### network visualization ----------------------------------------------------------------
+
+cormat = cor_est
+cormat[lower.tri(cormat)] = -1
+diag(cormat) = -1
+n = nrow(cormat)
+x = data.frame(row = rep(1:n, n), col = rep(1:n, each = n),
+               cor = as.vector(cormat))
+x = x[order(x$cor, decreasing = TRUE)[1:50], ]
+x$row = genenames[x$row]
+x$col = genenames[x$col]
+
+net = graph_from_data_frame(d=x, directed=F) 
+
+V(net)$size = mixpara[V(net)$name, "mu"] * 3
+cols = rep("#5C88DA", length(V(net)))
+# cols[V(net)$name %in% specific] = "#CC0C00"
+V(net)$color = cols
+E(net)$width = E(net)$cor * 2
+E(net)$edge.color = "gray50"
+
+pdf(paste0(plot_dir, "graph50.pdf"), width = 6, height = 6)
+plot(net, vertex.label.dist=1.5, vertex.label.color="black", vertex.label.cex = 0.8)
+dev.off()
+
+
+
+pubmed_count = sapply(V(net)$name, function(gene){
+  res = EUtilsSummary(paste0(gene, "[ALL] astrocyte[ALL]"), type='esearch', db='pubmed')
+  return(QueryCount(res))
+})
+table(pubmed_count)
+# 0  1  3 51
+# 44  8  3  1
+
+# 0   1   2   4   6   7  13  14  17  24  25  26  29  40  42  43  51  63 372
+# 2   3   4   1   2   2   1   1   2   1   1   1   1   1   2   2   1   1   1
+
+res = EUtilsSummary(paste(gene, "astrocyte"), type='esearch', db='pubmed')
+Querycount()
+
+
+
+

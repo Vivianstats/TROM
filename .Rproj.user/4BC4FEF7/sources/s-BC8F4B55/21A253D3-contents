@@ -1,0 +1,49 @@
+library(ggplot2);  theme_set(theme_bw())
+library(pheatmap)
+library(tidyr)
+options(stringsAsFactors = FALSE)
+
+tissues = c("Blood-Tcell", "Brain", "Digestive",
+            "Epithelial", "ES-deriv", "ESC",
+            "Heart", "HSC-Bcell", "iPSC",
+            "Mesench", "Muscle", "SmMuscle")
+
+### DO enrichment --------------------------------------------------------
+dir = "~/Dropbox/Collaboration/2019cage/codes/DO/"
+pdir = "~/Dropbox/Collaboration/2019cage/codes/DOplots/"
+pthre = 0.15
+for(tt in tissues){
+  sps = list.files(paste0(dir, tt, "/"))
+  sps = sapply(strsplit(sps, split = "\\."), function(x) x[1])
+  tables = lapply(sps, function(s){
+    mt = read.table(paste0(dir, tt, "/", s, ".txt"), sep = "\t", header = TRUE, quote="\"")
+    mt = mt[, c(1,3,4)]
+    mt = mt[mt$p.adjust <= pthre, ]
+    if(nrow(mt) == 0) return(NULL)
+    mt$sample = s
+    return(mt)
+  })
+  print("check")
+  tab = Reduce(rbind, tables)
+  ids = tab[, c(1,3)]
+  ids = ids[-which(duplicated(ids[,1])), ]
+  tab = tab[,c(1,2,4)]
+  print(class(tab))
+  tab = tidyr::spread(data = tab, key = ID, value = p.adjust)
+  rownames(tab) = tab$sample; tab = tab[,-1]
+  tab[is.na(tab)] = 1
+  p1 = pheatmap(mat = t(tab), cluster_rows = TRUE, cluster_cols = TRUE,
+           treeheight_col = 0, treeheight_row = 0)
+  col_order = p1$tree_col$order
+  row_order = p1$tree_row$order
+  tab[tab == 1] = NA
+  tab2 = t(tab)[row_order, col_order]
+  labels = ids[match(rownames(tab2), ids[,1]), 2]
+  pdf(paste0(pdir, tt, "-15.pdf"), width = 6, height = 9, onefile = FALSE)
+  p2 = pheatmap(mat = tab2, cluster_rows = FALSE, cluster_cols = FALSE,
+               border_color = NA, labels_row = labels, fontsize_col = 8,fontsize_row = 8,
+               color = colorRampPalette(rev(brewer.pal(n = 7, name = "GnBu")))(100))
+  dev.off()
+}
+
+

@@ -1,0 +1,312 @@
+]0;~/Documents/Projects/TROM/TROM package/TROM[?1034hWei-MacBook-Pro:TROM wei$ [KWei-MacBook-Pro:TROM wei$ ssh compbbio4
+liwei92@compbio4.stat.ucla.edu's password: 
+Permission denied, please try again.
+liwei92@compbio4.stat.ucla.edu's password: 
+Welcome to Ubuntu 14.04.5 LTS (GNU/Linux 4.4.0-31-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+233 packages can be updated.
+177 updates are security updates.
+
+New release '16.04.4 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+
+Last login: Mon Apr 23 10:36:33 2018 from vpn-86-164.stat.ucla.edu
+]0;liwei92@server2-X10DAx: ~liwei92@server2-X10DAx:~$ 
+]0;liwei92@server2-X10DAx: ~liwei92@server2-X10DAx:~$ 
+]0;liwei92@server2-X10DAx: ~liwei92@server2-X10DAx:~$ 
+]0;liwei92@server2-X10DAx: ~liwei92@server2-X10DAx:~$ top
+[?1h=[?25l[H[2J(B[mtop - 18:12:04 up 5 days,  2:29,  (B[m[39;49m(B[m[39;49m[K
+Tasks:(B[m[39;49m[1m 667 (B[m[39;49mtotal,(B[m[39;49m[1m   3 (B[m[39;49mrunning,(B[m[39;49m[1m 542(B[m[39;49m(B[m[39;49m[K
+%Cpu(s):(B[m[39;49m[1m  7.0 (B[m[39;49mus,(B[m[39;49m[1m  0.4 (B[m[39;49msy,(B[m[39;49m[1m  0.0 (B[m[39;49mni(B[m[39;49m(B[m[39;49m[K
+KiB Mem: (B[m[39;49m[1m 26402931+(B[m[39;49mtotal,(B[m[39;49m[1m 16776340(B[m[39;49m(B[m[39;49m[K
+KiB Swap:(B[m[39;49m[1m 26831257+(B[m[39;49mtotal,(B[m[39;49m[1m  5093616(B[m[39;49m(B[m[39;49m[K
+[K
+[7m  PID USER      PR  NI    VIRT (B[m[39;49m[K
+(B[m[1m40939 liwei92   20   0 15.673g (B[m[39;49m[K
+(B[m[1m27197 liwei92   20   0 3197144 (B[m[39;49m[K
+(B[m[1m43881 liwei92   20   0   29556 (B[m[39;49m[K
+(B[m    1 root      20   0   33924 (B[m[39;49m[K
+(B[m    2 root      20   0       0 (B[m[39;49m[K
+(B[m    3 root      20   0       0 (B[m[39;49m[K
+(B[m    5 root       0 -20       0 (B[m[39;49m[K
+(B[m    6 root      20   0       0 (B[m[39;49m[K
+(B[m    8 root      20   0       0 (B[m[39;49m[K
+(B[m    9 root      20   0       0 (B[m[39;49m[K
+(B[m   10 root      rt   0       0 (B[m[39;49m[K[?1l>[19;1H
+[?12l[?25h[K]0;liwei92@server2-X10DAx: ~liwei92@server2-X10DAx:~$ [K]0;liwei92@server2-X10DAx: ~liwei92@server2-X10DAx:~$ top
+[?1h=[?25l[H[2J(B[mtop - 18:12:09 up 5 days,  2:29,  2 users,  load average(B[m[39;49m(B[m[39;49m[K
+Tasks:(B[m[39;49m[1m 667 (B[m[39;49mtotal,(B[m[39;49m[1m   3 (B[m[39;49mrunning,(B[m[39;49m[1m 542 (B[m[39;49msleeping,(B[m[39;49m[1m   0 (B[m[39;49mstopped(B[m[39;49m(B[m[39;49m[K
+%Cpu(s):(B[m[39;49m[1m  7.0 (B[m[39;49mus,(B[m[39;49m[1m  0.4 (B[m[39;49msy,(B[m[39;49m[1m  0.0 (B[m[39;49mni,(B[m[39;49m[1m 91.4 (B[m[39;49mid,(B[m[39;49m[1m  1.2 (B[m[39;49mwa,(B[m[39;49m[1m  0(B[m[39;49m(B[m[39;49m[K
+KiB Mem: (B[m[39;49m[1m 26402931+(B[m[39;49mtotal,(B[m[39;49m[1m 16774736 (B[m[39;49mused,(B[m[39;49m[1m 24725456+(B[m[39;49mfree,(B[m[39;49m[1m (B[m[39;49m(B[m[39;49m[K
+KiB Swap:(B[m[39;49m[1m 26831257+(B[m[39;49mtotal,(B[m[39;49m[1m  5093616 (B[m[39;49mused,(B[m[39;49m[1m 26321896+(B[m[39;49mfree.(B[m[39;49m[1m (B[m[39;49m(B[m[39;49m[K
+[K
+[7m  PID USER      PR  NI    VIRT    RES    SHR S  %CPU (B[m[39;49m[K
+(B[m[1m27197 liwei92   20   0 3197144 1.755g   1872 R 100.0 (B[m[39;49m[K
+(B[m[1m40939 liwei92   20   0 15.673g 0.012t   6732 R  95.9 (B[m[39;49m[K
+(B[m[1m43882 liwei92   20   0   29556   3348   2452 R  12.0 (B[m[39;49m[K
+(B[m    1 root      20   0   33924   2904   1492 S   0.0 (B[m[39;49m[K
+(B[m    2 root      20   0       0      0      0 S   0.0 (B[m[39;49m[K
+(B[m    3 root      20   0       0      0      0 S   0.0 (B[m[39;49m[K
+(B[m    5 root       0 -20       0      0      0 S   0.0 (B[m[39;49m[K
+(B[m    6 root      20   0       0      0      0 S   0.0 (B[m[39;49m[K
+(B[m    8 root      20   0       0      0      0 S   0.0 (B[m[39;49m[K
+(B[m    9 root      20   0       0      0      0 S   0.0 (B[m[39;49m[K
+(B[m   10 root      rt   0       0      0      0 S   0.0 (B[m[39;49m[K[?1l>[19;1H
+[?12l[?25h[K]0;liwei92@server2-X10DAx: ~liwei92@server2-X10DAx:~$ R
+
+R version 3.4.2 (2017-09-28) -- "Short Summer"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> [K> ################################### ################
+> ### true DEs: set from real data (u sing mus estimated by scImpute)
+> ### simu DEs: identified from simul ated data (e.g., MAST)
+> 
+> ### v3
+> ### same cell number for two cell t ypes
+> ### varying fdr thresholds
+> ### one curve (precision/recall vs.  cell number) for one fdr
+> ################################### ################
+> 
+> rm(list = ls())
+> library(parallel)
+> library(MAST); library(scde)
+Loading required package: SummarizedExperiment
+Loading required package: GenomicRanges
+Loading required package: stats4
+Loading required package: BiocGenerics
+
+
+Attaching package: ‘BiocGenerics’
+
+The following objects are masked from ‘package:parallel’:
+
+    clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
+    clusterExport, clusterMap, parApply, parCapply, parLapply,
+    parLapplyLB, parRapply, parSapply, parSapplyLB
+
+The following objects are masked from ‘package:stats’:
+
+    IQR, mad, sd, var, xtabs
+
+The following objects are masked from ‘package:base’:
+
+    anyDuplicated, append, as.data.frame, cbind, colMeans, colnames,
+    colSums, do.call, duplicated, eval, evalq, Filter, Find, get, grep,
+    grepl, intersect, is.unsorted, lapply, lengths, Map, mapply, match,
+    mget, order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
+    rbind, Reduce, rowMeans, rownames, rowSums, sapply, setdiff, sort,
+    table, tapply, union, unique, unsplit, which, which.max, which.min
+
+Loading required package: S4Vectors
+
+Attaching package: ‘S4Vectors’
+
+The following object is masked from ‘package:base’:
+
+    expand.grid
+
+Loading required package: IRanges
+Loading required package: GenomeInfoDb
+Loading required package: Biobase
+Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with
+    'browseVignettes()'. To cite Bioconductor, see
+    'citation("Biobase")', and for packages 'citation("pkgname")'.
+
+Loading required package: DelayedArray
+Loading required package: matrixStats
+
+Attaching package: ‘matrixStats’
+
+The following objects are masked from ‘package:Biobase’:
+
+    anyMissing, rowMedians
+
+
+Attaching package: ‘DelayedArray’
+
+The following objects are masked from ‘package:matrixStats’:
+
+    colMaxs, colMins, colRanges, rowMaxs, rowMins, rowRanges
+
+The following object is masked from ‘package:base’:
+
+    apply
+
+
+Attaching package: ‘MAST’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+Loading required package: flexmix
+Loading required package: lattice
+> suppressPackageStartupMessages({
++   library(zingeR)
++   library(Biobase)
++   library(gamlss)
++   library(gamlss.tr)
++   library(edgeR)
++   library(DESeq2)
++ })
+Warning messages:
+1: multiple methods tables found for ‘Ontology’ 
+2: replacing previous import ‘BiocGenerics::Ontology’ by ‘AnnotationDbi::Ontology’ when loading ‘annotate’ 
+3: multiple methods tables found for ‘Ontology’ 
+> library(zoo) #library(PRROC) 
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+> library(MASS)
+> library(ggplot2); theme_set(theme_b w()); library(tidyr)
+
+Attaching package: ‘tidyr’
+
+The following object is masked from ‘package:S4Vectors’:
+
+    expand
+
+> # library(grid); library(gtable); l ibrary(gridExtra)
+> # library(reshape2)
+> # library(ggsci)
+> 
+> suppfuns = list.files("~/Dropbox/sc Simulate/code/DE6/suppfuns/active")
+> for(x in suppfuns){
++   if(x == "supp_de_DE6.R") next
++   source(paste0("~/Dropbox/scSimula te/code/DE6/suppfuns/active/", x))
++ }
+> 
+> data_dir = "/media/server2/data1/sc Simulate/data/"
+> plot_dir = "~/Dropbox/scSimulate/co de/result/DE6/de-compare/s1/"
+> dir.create(plot_dir, recursive = TR UE)
+Warning message:
+In dir.create(plot_dir, recursive = TRUE) :
+  '/home/liwei92/Dropbox/scSimulate/code/result/DE6/de-compare/s1' already exists
+> ### s1: pUp = 0.05, pDown = 0.05, u fold = 5, lfold = 2
+> 
+> rdata = c("study1.rds", "study2.rds ", "study3-a.rds", 
++           "study4.rds", "study6.rds ", "study7.rds")
+> 
+> study_names = c("Human-Smartseq2"," Mouse-Dropseq","Mouse-10x",
++                 "Human-C1", "Mouse- inDrop", "Human-Seqwell")
+> 
+> ncell_thre = 30
+> nnzero_thre = 3
+> ncores = 20
+> i = 5
+>   set.seed(i)
+>   print(rdata[i])
+[1] "study6.rds"
+>   count_list = get_realcount_list(i , rdata, data_dir, ncell_thre, nnzero _thre)
+[1] "study6.rds"
+
+sapply(count_list,[1] "Excitatory"
+ ncol[1] "Interneurons"
+[1] "Oligodendrocytes"
+)[1] "Endothelial_SmoothMuscle"
+[1] "Astrocytes"
+[1] "Microglia"
+>  
+>   ### simulate datasets
+>   ulabels = names(count_list)
+> 
+> sapply(count_list, ncol)
+              Excitatory             Interneurons         Oligodendrocytes 
+                    1040                      116                      286 
+Endothelial_SmoothMuscle               Astrocytes                Microglia 
+                     146                      189                      401 
+> [K> sapply(count_list, ncol)
+              Excitatory             Interneurons         Oligodendrocytes 
+                    1040                      116                      286 
+Endothelial_SmoothMuscle               Astrocytes                Microglia 
+                     146                      189                      401 
+> [K> sapply(count_list, ncol)
+              Excitatory             Interneurons         Oligodendrocytes 
+                    1040                      116                      286 
+Endothelial_SmoothMuscle               Astrocytes                Microglia 
+                     146                      189                      401 
+> [K> [K> [K> [K> [K> [K> [K> [K> [K> i = 6
+>   count_list = get_realcount _list(i, rdata, data_dir, ncel l_thre, nnzero_thre)
+[1] "study7.rds"
+[1] "Bcell"
+[1] "CD4"
+[1] "CD8"
+[1] "DC"
+[1] "NK"
+[1] "Myeloid"
+>   count_list = get_realcount__list(i, rdata, data_dir, ncelll_thre, nnzero_thre)[A[A[C[Ci = 6[K
+[K
+[K[A[A[C[C[C[C[C[C[C[C[Csapply(count_list, ncol)
+  Bcell     CD4     CD8      DC      NK Myeloid 
+    376     634     269     104     471    1840 
+> [K> sapply(count_list, ncol)
+  Bcell     CD4     CD8      DC      NK Myeloid 
+    376     634     269     104     471    1840 
+> [K> quit()
+Save workspace image? [y/n/c]: n
+]0;liwei92@server2-X10DAx: ~liwei92@server2-X10DAx:~$ cd Drq[Kopboxx/scSimulate/code/DE6
+]0;liwei92@server2-X10DAx: ~/Dropbox/scSimulate/code/DE6liwei92@server2-X10DAx:~/Dropbox/scSSimulate/code/DE6$ R CMD BATCH DE_f romSimSc_v6.R & disown
+[1] 43962
+]0;liwei92@server2-X10DAx: ~/Dropbox/scSimulate/code/DE6liwei92@server2-X10DAx:~/Dropbox/scSSimulate/code/DE6$ [K[A]0;liwei92@server2-X10DAx: ~/Dropbox/scSimulate/code/DE6liwei92@server2-X10DAx::~/Dropbox/scSimulate/ccode/DE6$ 
+]0;liwei92@server2-X10DAx: ~/Dropbox/scSimulate/code/DE6liwei92@server2-X10DAx::~/Dropbox/scSimulate/ccode/DE6$ 
+]0;liwei92@server2-X10DAx: ~/Dropbox/scSimulate/code/DE6liwei92@server2-X10DAx::~/Dropbox/scSimulate/ccode/DE6$ 
+]0;liwei92@server2-X10DAx: ~/Dropbox/scSimulate/code/DE6liwei92@server2-X10DAx::~/Dropbox/scSimulate/ccode/DE6$ dropbox stat us
+Up to date
+]0;liwei92@server2-X10DAx: ~/Dropbox/scSimulate/code/DE6liwei92@server2-X10DAx::~/Dropbox/scSimulate/ccode/DE6$ [K[A[A]0;liwei92@server2-X10DAx: ~/Dropbox/scSimulate/code/DE6liwei92@server2-X10DAx:~/Dropboox/scSimulate/code/DE6$ R CMD  BATCH DE_fromRealSc_v6.R & dis own
+[1] 44295
+]0;liwei92@server2-X10DAx: ~/Dropbox/scSimulate/code/DE6liwei92@server2-X10DAx:~/Dropboox/scSimulate/code/DE6$ 
+]0;liwei92@server2-X10DAx: ~/Dropbox/scSimulate/code/DE6liwei92@server2-X10DAx:~/Dropboox/scSimulate/code/DE6$ 
+]0;liwei92@server2-X10DAx: ~/Dropbox/scSimulate/code/DE6liwei92@server2-X10DAx:~/Dropboox/scSimulate/code/DE6$ R CMD BBATCH DE_fromRealSc_v6.R & disoown
+[1] 44312
+]0;liwei92@server2-X10DAx: ~/Dropbox/scSimulate/code/DE6liwei92@server2-X10DAx:~/Dropboox/scSimulate/code/DE6$ packet_write_wait: Connection to 128.97.55.12 port 22: Broken pipe
+]0;~/Documents/Projects/TROM/TROM package/TROMWei-MacBook-Pro:TROM wei$ ]0;~/Documents/Projects/TROM/TROM package/TROM[?1034hWei-MacBook-Pro:TROM wei$ z_th re
+bash: z_thre: command not found
+[KWei-MacBook-Pro:TROM wei$ ]0;~/Dropbox/Collaboration/2019cage/codes[?1034hid-55-154:codes wei$ library(ggplot2);  t heme_set(theme_bw())
+bash: syntax error near unexpected token `ggplot2'
+]0;~/Dropbox/Collaboration/2019cage/codesid-55-154:codes wei$ library(pheatmap)
+bash: syntax error near unexpected token `pheatmap'
+]0;~/Dropbox/Collaboration/2019cage/codesid-55-154:codes wei$ library(tidyr)
+bash: syntax error near unexpected token `tidyr'
+]0;~/Dropbox/Collaboration/2019cage/codesid-55-154:codes wei$ options(stringsAsFac tors = FALSE)
+bash: syntax error near unexpected token `stringsAsFactors'
+]0;~/Dropbox/Collaboration/2019cage/codesid-55-154:codes wei$ 
+]0;~/Dropbox/Collaboration/2019cage/codesid-55-154:codes wei$ tissues = c("Blood-T cell", "Brain", "Digestive",
+bash: syntax error near unexpected token `('
+]0;~/Dropbox/Collaboration/2019cage/codesid-55-154:codes wei$             "Epithel ial", "ES-deriv", "ESC",
+bash: Epithelial,: command not found
+]0;~/Dropbox/Collaboration/2019cage/codesid-55-154:codes wei$             "Heart",  "HSC-Bcell", "iPSC",
+bash: Heart,: command not found
+]0;~/Dropbox/Collaboration/2019cage/codesid-55-154:codes wei$             "Mesench ", "Muscle", "SmMuscle")
+bash: syntax error near unexpected token `)'
+]0;~/Dropbox/Collaboration/2019cage/codesid-55-154:codes wei$ 
+]0;~/Dropbox/Collaboration/2019cage/codesid-55-154:codes wei$ ### DO enrichment -- ----------------------------------------- -------------
+]0;~/Dropbox/Collaboration/2019cage/codesid-55-154:codes wei$ dir = "~/Dropbox/Col laboration/2019cage/codes/DO/"
+bash: dir: command not found
+]0;~/Dropbox/Collaboration/2019cage/codesid-55-154:codes wei$ pdir = "~/Dropbox/Co llaboration/2019cage/codes/DOplots/"
+bash: pdir: command not found
+]0;~/Dropbox/Collaboration/2019cage/codesid-55-154:codes wei$ pthre = 0.15
+bash: pthre: command not found
+[Kid-55-154:codes wei$ 

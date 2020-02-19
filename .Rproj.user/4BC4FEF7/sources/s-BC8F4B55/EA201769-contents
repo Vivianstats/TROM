@@ -1,0 +1,108 @@
+rm(list = ls())
+
+###----------------------------------------------------------------------------
+### use package
+###----------------------------------------------------------------------------
+
+# install.packages("~/Dropbox/Rpkgs-dev/aid_dev/AIDE_0.0.2.tar.gz",
+#                  repos = NULL, type="source")
+# library(AIDE)
+
+###----------------------------------------------------------------------------
+### use codes
+###----------------------------------------------------------------------------
+
+library(gtools)
+library(Rcpp)
+library(RcppArmadillo)
+library(parallel)
+library(truncdist)
+library(igraph)
+
+#library(tidyr)
+#library(dplyr)
+library(stringr)
+library(GenomicAlignments)
+library(GenomicFeatures)
+library(Biostrings)
+library(rbamtools)
+library(np)
+#
+# #source("https://bioconductor.org/biocLite.R")
+# #biocLite(c("GenomicAlignments", "GenomicFeatures", "Biostrings"))
+
+supp = "~/Dropbox/Rpkgs-dev/aid_dev/support_funs/"
+sourceCpp(paste(supp, "calculate_h_supp.cpp", sep = ""))
+sourceCpp(paste(supp, "estimation.cpp", sep =""))
+
+support = "~/Dropbox/Rpkgs-dev/aid_dev/AIDE/R/"
+source(paste(support, "gtf_to_gene_models.R", sep = ""))
+source(paste(support, "get_reads.R", sep = ""))
+source(paste(support, "get_fragment_length_dist.R", sep =""))
+source(paste(support, "get_reads_from_bam.R", sep =""))
+source(paste(support, "filter_by_reads.R", sep =""))
+source(paste(support, "estimate_starts_distribution_simplify.R", sep =""))
+source(paste(support, "calculate_h_bias.R", sep =""))
+source(paste(support, "stepwise_LRT_wrap_detailed_notruth.R", sep =""))
+source(paste(support, "rdata_to_gtf.R", sep = ""))
+source(paste(support, "aide.R", sep = ""))
+
+
+
+
+ncores = 16
+readLen = 150
+
+gtf_path = "/media/server2/data1/data/Guo2019/sxl_all_2_uniprot_unstr.gtf"
+
+fasta_path = "/media/server2/data1/data/Guo2019/481scaffolds.fa"
+
+# for(k in 1:4){
+#   bam_path = paste0("/media/server2/data1/data/Guo2019/bam/trim_A", k,
+#                     "_Aligned.sortedByCoord.out.bam")
+#   out_dir = paste0("/media/server2/data1/data/Guo2019/aide-strict/A", k, "/")
+#   dir.create(out_dir, recursive = TRUE)
+#   set.seed(2019)
+#   aide(gtf_path = gtf_path, bam_path = bam_path, fasta_path = fasta_path,
+#        out_dir = out_dir, readLen = readLen, strandmode = 0, pval = 1e-4/20956,
+#        mode = "strict",
+#        ncores = ncores, ne = 25)
+# }
+# 
+# for(k in c(1,4)){
+#   bam_path = paste0("/media/server2/data1/data/Guo2019/bam/J", k, 
+#                     "_Aligned.sortedByCoord.out.bam")
+#   out_dir = paste0("/media/server2/data1/data/Guo2019/aide-strict/J", k, "/")
+#   dir.create(out_dir, recursive = TRUE)
+#   set.seed(2019)
+#   aide(gtf_path = gtf_path, bam_path = bam_path, fasta_path = fasta_path,
+#        out_dir = out_dir, readLen = readLen, strandmode = 0, pval = 1e-4/20956,
+#        mode = "strict",
+#        ncores = ncores, ne = 25)
+# }
+
+for(k in c(1,4)){
+  bam_path = paste0("/media/server2/data1/data/Guo2019/bam/RA", k, 
+                    "_Aligned.sortedByCoord.out.bam")
+  out_dir = paste0("/media/server2/data1/data/Guo2019/aide-strict/RA", k, "/")
+  dir.create(out_dir, recursive = TRUE)
+  set.seed(2019)
+  aide(gtf_path = gtf_path, bam_path = bam_path, fasta_path = fasta_path,
+       out_dir = out_dir, readLen = readLen, strandmode = 0, pval = 1e-4/20956,
+       mode = "strict",
+       ncores = ncores, ne = 25)
+}
+
+
+# for(k in c(1,2,4)){
+#   bam_path = paste0("/media/server2/data1/data/Guo2019/bam/RY", k, 
+#                     "_Aligned.sortedByCoord.out.bam")
+#   out_dir = paste0("/media/server2/data1/data/Guo2019/aide-strict/RY", k, "/")
+#   dir.create(out_dir, recursive = TRUE)
+#   set.seed(2019)
+#   aide(gtf_path = gtf_path, bam_path = bam_path, fasta_path = fasta_path,
+#        out_dir = out_dir, readLen = readLen, strandmode = 0, pval = 1e-4/20956,
+#        mode = "strict",
+#        ncores = ncores, ne = 25)
+# }
+

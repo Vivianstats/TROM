@@ -1,0 +1,238 @@
+rm(list = ls())
+library(pheatmap)
+library(preprocessCore)
+library(openxlsx)
+library(parallel)
+
+
+### ----------------------------------------------------------------
+### patients' data
+### ----------------------------------------------------------------
+
+pt_baseline = paste0("Pt", c(1, 3:6, 8:10, 15:17, 20), "-baseline")
+pt_DP = c("Pt1-DP1",
+          "Pt3-DP1", "Pt3-DP2", "Pt3-DP3",
+          "Pt4-DP1",
+          "Pt5-DP1",
+          "Pt6-DP1", "Pt6-DP2",
+          "Pt8-DP1", "Pt8-DP2", "Pt8-DP3",
+          "Pt9-DP1", "Pt9-DP2",
+          "Pt10-DP1", "Pt10-DP2", "Pt10-DP3", "Pt10-DP4", "Pt10-DP5", "Pt10-DP6", "Pt10-DP7", "Pt10-DP8", "Pt10-DP9",
+          "Pt15-DP1",
+          "Pt16-DP1",
+          "Pt17-DP1", "Pt17-DP2",
+          "Pt20-DP1")
+pts = c(pt_baseline, pt_DP)
+
+rdata_dir = "/media/server2/data1/Discovery/melanoma/Nazarian_2010/"
+dir = "~/Dropbox/Iso\ Discovery/Codes/compare_transcripts/melanoma/annotation_heatmap/"
+gene_model_path = "~/Dropbox/Iso\ Discovery/Codes/gene_models/human/human_protein_v24.RData"
+load(gene_model_path)
+
+exonNum = sapply(gene_models, function(x) x$exonNum)
+geneNames = names(gene_models[exonNum >= 2])
+
+fpkm_thre = 2
+
+### ----------------------------------------------------------------
+### txs' FPKM heatmap
+### ----------------------------------------------------------------
+
+# fpkm_list = lapply(1:length(geneNames), function(id){
+#   if(id %% 50==0) print(id)
+#   cgene = gene_models[[ geneNames[id] ]]
+#   atxs = cgene$txs
+#   mat = sapply(pts, function(pt){
+#     load(paste0(rdata_dir, pt, "/", id, ".RData"))
+#     if (class(result) != "list") return(rep(NA, length(atxs)))
+#     vals = result$rpkm[match(result$Ind_annt, result$Ind_check)]
+#     vals[is.na(vals)] = 0
+#     return(vals)
+#   })
+#   if(class(mat) != "matrix"){ mat = matrix(mat, nrow = 1)}
+#   rownames(mat) = names(atxs)
+#   return(mat)
+# })
+
+# save(fpkm_list, file = paste0(rdata_dir, "fpkm_list.RData"))
+load(paste0(rdata_dir, "fpkm_list.RData"))
+txs_num = sapply(gene_models[geneNames], function(x) x$txNum)
+txs_cumnum = c(0,cumsum(txs_num))
+fpkm_mat = matrix(0, nrow = sum(txs_num), ncol = length(pts))
+for(id in 1:length(geneNames)){
+  fpkm_mat[(txs_cumnum[id]+1):txs_cumnum[id+1], ] = fpkm_list[[id]]
+}
+
+gene_rnames = sapply(gene_models[geneNames], function(x) x$genename)
+gene_rnames = lapply(1:length(gene_rnames), function(x){
+  rep(gene_rnames[x], gene_models[[geneNames[x] ]]$txNum)
+})
+rnames = lapply(1:length(fpkm_list), function(i){
+  txnames = rownames(fpkm_list[[i]])
+  txnames = sapply(strsplit(rownames(fpkm_list[[i]]), split = "\\."), '[', 1)
+  paste(txnames, gene_rnames[[i]], sep = "; ")
+})
+# rownames(fpkm_mat) = unlist(gene_rnames)
+rownames(fpkm_mat) = unlist(rnames)
+colnames(fpkm_mat) = pts
+
+nanum = apply(fpkm_mat, 1, function(x) sum(is.na(x)))
+fpkm_mat = fpkm_mat[nanum <= 5, ]
+fpkm_mat = fpkm_mat[apply(fpkm_mat, 1, mean, na.rm = TRUE) > fpkm_thre, ]
+
+
+NN = length(pt_baseline)
+ptid_baseline = strsplit(pt_baseline, split = "-")
+ptid_baseline = sapply(ptid_baseline, function(x) x[1])
+ptid_dp = strsplit(pt_DP, split = "-")
+ptid_dp = sapply(ptid_dp, function(x) x[1])
+for(jj in 1:length(ptid_dp)){
+  id_base = which(ptid_baseline == ptid_dp[jj])
+  tp = fpkm_mat[, NN+jj]/fpkm_mat[, id_base]
+  tp[(fpkm_mat[, id_base] == 0) & (fpkm_mat[, NN+jj] == 0)] = 1
+  fpkm_mat[, NN+jj] = tp
+}
+
+
+### ----------------------------------------------------------------
+### txs' fpkm heatmap (for gene list)
+### ----------------------------------------------------------------
+
+gene_list = read.xlsx("~/Dropbox/Iso\ Discovery/melanoma/MAPK\ and\ PI3K\ AKT\ geneset_11-17.xlsx",
+                      colNames = TRUE)
+j = 1
+pathway = colnames(gene_list)[j]
+selnames = gene_list[, j]
+selnames = selnames[!is.na(selnames)]
+
+
+### log2 based
+rownames_gene = strsplit(rownames(fpkm_mat), split = "; ")
+rownames_gene = sapply(rownames_gene, function(x) x[2])
+submat = fpkm_mat[rownames_gene %in% selnames, (NN + 1):length(pts)] 
+submat[submat >= 2] = 2
+submat[submat <= 0.5] = 0.5
+submat = log2(submat)
+
+rankmat = submat
+rankmat[submat > log2(1.2)] = 1 
+rankmat[submat < log2(0.8)] = -1 
+rankmat[submat <= log2(1.2) & submat >= log2(0.8)] = 0
+
+# recur = t(sapply(1:nrow(submat), function(i){
+#   tapply(rankmat[i, ], ptid_dp, mean)
+# }))
+# recur[abs(recur) < 1] = 0
+# recur_sum = apply(recur, 1, function(x) {
+#   a = sum(x == 1, na.rm = TRUE)
+#   b = sum(x == -1, na.rm = TRUE)
+#   if(a >= b) return(a)
+#   return(-b)
+# })
+recur_sum = apply(rankmat, 1, function(x) {
+  a = sum(x == 1, na.rm = TRUE)
+  b = sum(x == -1, na.rm = TRUE)
+  if(a >= b) return(a)
+  return(-b)
+})
+change_di = rep("", nrow(submat))
+change_di[recur_sum > 0] = "+"
+change_di[recur_sum < 0] = "-"
+change_di = change_di[order(recur_sum)]
+submat = submat[order(recur_sum), ]
+
+
+condition = strsplit(pts[(NN+1):length(pts)], split = "-") 
+condition = sapply(condition, function(x) x[2])
+condition[!(condition %in% c("baseline", "DP1", "DP2"))] = "DP3+"
+df = data.frame(condition = condition)
+rownames(df) = colnames(submat)
+rownames(submat) = paste(rownames(submat), change_di)
+submat[submat > 1] = 1
+submat[submat < -1] = -1
+# pdf(paste0(dir, "fpkm_", pathway, "_recurorder_log2.pdf"), width = 10, height = 4, onefile = FALSE)
+# pbulk =  pheatmap(submat, cluster_rows=FALSE,
+#                   show_rownames=TRUE, show_colnames=TRUE,
+#                   cluster_cols=TRUE, annotation_col=df,
+#                   treeheight_row = 0, treeheight_col = 20, fontsize_row = 6,
+#                   legend_labels = "log2")# ,
+# dev.off()
+
+
+
+info = rownames(submat)
+info = strsplit(info, split = "; ")
+tx = sapply(info, function(x) x[[1]])
+info = strsplit(sapply(info, function(x) x[[2]]), split = " ")
+dat = data.frame(tx = tx,
+                 gene = sapply(info, function(x) x[[1]]),
+                 DE = sapply(info, function(x) x[[2]]))
+gene_names = sapply(gene_models, function(x) x$genename)
+wtinfo = lapply(1:nrow(dat), function(i){
+  gene = dat[i, "gene"]
+  ind = which(gene_names == gene)
+  cgene = gene_models[[ind]]
+  txs = sapply(strsplit(names(cgene$txs), split = "\\."), '[', 1)
+  txind = which(txs == dat[i, "tx"])
+  tx = cgene$txs[[txind]]
+  exon_starts = cgene$exonStarts[tx]
+  exon_ends = cgene$exonEnds[tx]
+  list(wt = length(tx) == cgene$exonNum, exon = paste(tx, collapse = ", "),
+       exon_starts = paste(exon_starts, collapse = ", "),
+       exon_ends = paste(exon_ends, collapse = ", "),
+       chr = cgene$chr)
+})
+dat$wt = sapply(wtinfo, function(x) x$wt)
+dat$exons = sapply(wtinfo, function(x) x$exon)
+dat$exon_starts = sapply(wtinfo, function(x) x$exon_starts)
+dat$exon_ends = sapply(wtinfo, function(x) x$exon_ends)
+dat$chr = sapply(wtinfo, function(x) x$chr)
+
+
+dat_p1 = dat
+dat_p2 = dat
+
+##############
+### wild type
+##############
+
+
+### log10 based
+# submat = fpkm_mat[rownames(fpkm_mat) %in% selnames, (NN + 1):length(pts)] 
+# submat[submat >= 10] = 10
+# submat[submat <= 1/10] = 1/10
+# submat = log2(submat)
+# 
+# rankmat = submat
+# rankmat[submat > 0.1] = 1 
+# rankmat[submat < -0.1] = -1 
+# rankmat[abs(submat) <= 0.1] = 0
+# 
+# recur = t(sapply(1:nrow(submat), function(i){
+#   tapply(rankmat[i, ], ptid_dp, mean)
+# }))
+# recur[abs(recur) < 1] = 0
+# recur_sum = apply(recur, 1, function(x) {
+#   a = sum(x == 1, na.rm = TRUE)
+#   b = sum(x == -1, na.rm = TRUE)
+#   if(a >= b) return(a)
+#   return(-b)
+# })
+# submat = submat[order(recur_sum), ]
+# 
+# 
+# condition = strsplit(pts[(NN+1):length(pts)], split = "-") 
+# condition = sapply(condition, function(x) x[2])
+# condition[!(condition %in% c("baseline", "DP1", "DP2"))] = "DP3+"
+# df = data.frame(condition = condition)
+# rownames(df) = colnames(submat)
+# 
+# submat[submat > 1] = 1
+# submat[submat < -1] = -1
+# pdf(paste0(dir, "fpkm_", pathway, "_recurorder_log10.pdf"), width = 8, height = 4, onefile = FALSE)
+# pbulk =  pheatmap(submat, cluster_rows=FALSE,
+#                   show_rownames=TRUE, show_colnames=TRUE,
+#                   cluster_cols=FALSE, annotation_col=df,
+#                   treeheight_row = 0, treeheight_col = 20, fontsize_row = 6,
+#                   legend_labels = "log10")# ,
+# dev.off()

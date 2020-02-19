@@ -1,0 +1,13 @@
+Package: TROM
+Type: Package
+Title: Transcriptome Overlap Measure
+Version: 1.4
+Date: 2018-06-29
+Author: Jingyi Jessica Li <jli@stat.ucla.edu>, Wei Vivian Li <liw@ucla.edu>
+Maintainer: Jingyi Jessica Li <jli@stat.ucla.edu>
+Depends: R (>= 3.1.0), lattice, methods
+Imports: AnnotationDbi, openxlsx, GO.db, gtools, RColorBrewer, gplots, topGO
+Description: A new bioinformatic tool for comparing transcriptomes of two biological samples from the same or different species. The mapping is conducted based on the overlap of the associated genes of different samples. More examples and detailed explanations are available in the vignette. For detailed description of the method, please refer to Li, Wei Vivian, Yiling Chen, and Jingyi Jessica Li. "TROM: A testing-based method for finding transcriptomic similarity of biological samples." Statistics in biosciences 9.1 (2017): 105-136 <doi:10.1007/s12561-016-9163-y>.
+License: GPL-2
+URL: http://www.stat.ucla.edu/~jingyi.li/software-and-data/trom.html, http://www.stat.ucla.edu/~jingyi.li/packages/TROM/vignette.pdf
+
